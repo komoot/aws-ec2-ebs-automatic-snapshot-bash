@@ -101,7 +101,7 @@ export PATH=$PATH:/usr/local/bin/:/usr/bin
 # Set Variables
 instance_id=`wget -q -O- http://169.254.169.254/latest/meta-data/instance-id`
 region=`wget -q -O- http://169.254.169.254/latest/meta-data/placement/availability-zone | sed -e 's/\([1-9]\).$/\1/g'`
-today=`date +"%m-%d-%Y"+"%T"`
+today=`date +"%Y-%m-%d"+"%T"`
 logfile="/var/log/ebs-snapshot.log"
 
 # How many days do you wish to retain backups for? Default: 7 days
