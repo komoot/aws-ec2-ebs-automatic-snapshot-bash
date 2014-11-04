@@ -100,6 +100,7 @@ export PATH=$PATH:/usr/local/bin/:/usr/bin
 
 # Set Variables
 instance_id=`wget -q -O- http://169.254.169.254/latest/meta-data/instance-id`
+region=`wget -q -O- http://169.254.169.254/latest/meta-data/placement/availability-zone | sed -e 's/\([1-9]\).$/\1/g'`
 today=`date +"%m-%d-%Y"+"%T"`
 logfile="/var/log/ebs-snapshot.log"
 
@@ -111,7 +112,7 @@ retention_date_in_seconds=`date +%s --date "$retention_days days ago"`
 echo $today >> $logfile
 
 # Grab all volume IDs attached to this instance, and export the IDs to a text file
-aws ec2 describe-volumes  --filters Name=attachment.instance-id,Values=$instance_id --query Volumes[].VolumeId --output text | tr '\t' '\n' > /tmp/volume_info.txt 2>&1
+aws ec2 describe-volumes --region $region --filters Name=attachment.instance-id,Values=$instance_id --query Volumes[].VolumeId --output text | tr '\t' '\n' > /tmp/volume_info.txt 2>&1
 
 # Take a snapshot of all volumes attached to this instance
 for volume_id in $(cat /tmp/volume_info.txt)
